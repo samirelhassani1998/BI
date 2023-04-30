@@ -1,1 +1,8 @@
-
+streamlit
+pandas
+geopandas
+pyshp
+requests
+fiona
+rtree
+matplotlib
