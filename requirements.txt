@@ -7,3 +7,4 @@ fiona
 rtree
 matplotlib
 folium
+streamlit-folium
