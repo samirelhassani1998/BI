@@ -5,6 +5,8 @@ from io import BytesIO
 from zipfile import ZipFile
 import tempfile
 import os
+import folium
+from streamlit_folium import folium_static
 
 st.title("Parcelles en Agriculture Biologique déclarées à la PAC")
 
@@ -38,4 +40,8 @@ progress_text.empty()
 st.write(shp.head())
 
 # Afficher les données sur une carte
-st.map(shp)
+m = folium.Map(location=[47.0833, 2.4000], zoom_start=6)
+shp_json = shp.to_crs(epsg=4326).to_json()
+
+folium.GeoJson(shp_json).add_to(m)
+folium_static(m)
