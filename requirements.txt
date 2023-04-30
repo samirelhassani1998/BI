@@ -6,3 +6,4 @@ requests
 fiona
 rtree
 matplotlib
+folium
