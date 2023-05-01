@@ -5,12 +5,16 @@ from zipfile import ZipFile
 import pandas as pd
 import numpy as np
 import glob
+from urllib.error import HTTPError
 
 def download_unzip(zipurl, destination):
     """Download zipfile from URL and extract it to destination"""
-    with urlopen(zipurl) as zipresp:
-        with ZipFile(BytesIO(zipresp.read())) as zfile:
-            zfile.extractall(destination)
+    try:
+        with urlopen(zipurl) as zipresp:
+            with ZipFile(BytesIO(zipresp.read())) as zfile:
+                zfile.extractall(destination)
+    except HTTPError as e:
+        print(f"HTTP Error: {e.code} {e.reason} for URL: {zipurl}")
 
 def load_data():
     csv_files = sorted(glob.glob('data/*.csv'))
