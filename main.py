@@ -53,7 +53,25 @@ def main():
 
     st.header("Chargement des données")
     df = load_data()
+
+    st.subheader("Nettoyage des données")
+    df.dropna(axis='index', inplace=True)
+    df['age'] = (df['datedeces'] - df['datenaiss']) / np.timedelta64(1, 'Y')
+    df = df[df['age'] >= 0]
+
+    df['death_year'] = df['datedeces'].dt.year
+    women = df[df.sexe == 2]  # a subset containing women
+    men = df[df.sexe == 1]  # a subset containing men
+
+    st.subheader("Affichage des données")
     st.dataframe(df.head())
+
+    st.subheader("Statistiques")
+    template_line = "{:<10} {:,}"
+    st.write(template_line.format('df', len(df)))
+    st.write(template_line.format('women', len(women)))
+    st.write(template_line.format('men', len(men)))
+
     st.success("Chargement des données terminé.")
 
 if __name__ == "__main__":
