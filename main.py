@@ -6,6 +6,8 @@ import pandas as pd
 import numpy as np
 import glob
 from urllib.error import HTTPError
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def download_unzip(zipurl, destination):
     """Download zipfile from URL and extract it to destination"""
@@ -71,6 +73,21 @@ def main():
     st.write(template_line.format('df', len(df)))
     st.write(template_line.format('women', len(women)))
     st.write(template_line.format('men', len(men)))
+
+    st.subheader("Graphique des décès par année")
+    sns.set()
+    by_year = df.groupby('death_year').size()
+    by_year_women = women.groupby('death_year').size()
+    by_year_men = men.groupby('death_year').size()
+    ax = by_year.plot(label="Total")
+    by_year_women.plot(style='--', ax=ax, label="Women")
+    by_year_men.plot(style='-.', ax=ax, label="Men")
+    ax.set_ybound(lower=0)
+    ax.set_xlabel("Year")
+    ax.set_title("Number of deaths")
+    ax.legend()
+
+    st.pyplot(plt)
 
     st.success("Chargement des données terminé.")
 
