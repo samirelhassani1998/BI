@@ -1,3 +1,3 @@
-# BI - Parcelles en Agriculture Biologique (AB) déclarées à la PAC
+# BI - Fichier des personnes décédées
 URL : https://samirelhassani1998-bi-main-xec3sa.streamlit.app/ 
-Dataset : https://www.data.gouv.fr/fr/datasets/parcelles-en-agriculture-biologique-ab-declarees-a-la-pac/
+Dataset : https://www.data.gouv.fr/fr/datasets/fichier-des-personnes-decedees/#/community-reuses
