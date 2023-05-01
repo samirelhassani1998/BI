@@ -9,6 +9,7 @@ from urllib.error import HTTPError
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+@st.cache
 def download_unzip(zipurl, destination):
     """Download zipfile from URL and extract it to destination"""
     try:
@@ -18,6 +19,7 @@ def download_unzip(zipurl, destination):
     except HTTPError as e:
         print(f"HTTP Error: {e.code} {e.reason} for URL: {zipurl}")
 
+@st.cache
 def load_data():
     csv_files = sorted(glob.glob('data/*.csv'))
     n_files = len(csv_files)
@@ -77,19 +79,4 @@ def main():
     st.subheader("Graphique des décès par année")
     sns.set()
     by_year = df.groupby('death_year').size()
-    by_year_women = women.groupby('death_year').size()
-    by_year_men = men.groupby('death_year').size()
-    ax = by_year.plot(label="Total")
-    by_year_women.plot(style='--', ax=ax, label="Women")
-    by_year_men.plot(style='-.', ax=ax, label="Men")
-    ax.set_ybound(lower=0)
-    ax.set_xlabel("Year")
-    ax.set_title("Number of deaths")
-    ax.legend()
-
-    st.pyplot(plt)
-
-    st.success("Chargement des données terminé.")
-
-if __name__ == "__main__":
-    main()
+   
