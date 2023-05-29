@@ -53,7 +53,6 @@ def main():
         url = f"https://www.insee.fr/fr/statistiques/fichier/4190491/Deces_{year}.zip"
         st.write("Downloading and extracting", url)
         download_unzip(url, 'data')
-    df = load_data(year).copy()  # move this line inside the main function
 
     st.success("Téléchargement et extraction des fichiers de données terminés.")
 
@@ -61,9 +60,12 @@ def main():
     df = load_data(year)
 
     st.subheader("Nettoyage des données")
-    df.dropna(axis='index', inplace=True)
-    df['age'] = (df['datedeces'] - df['datenaiss']) / np.timedelta64(1, 'Y')
-    df = df[df['age'] >= 0]
+    
+df = load_data(year).copy()  # continue to make a copy here
+
+df = df.dropna(axis='index')  # don't modify in-place
+df['age'] = (df['datedeces'] - df['datenaiss']) / np.timedelta64(1, 'Y')
+df = df[df['age'] >= 0]
 
     df['death_year'] = df['datedeces'].dt.year
     women = df[df.sexe == 2]  # a subset containing women
