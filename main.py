@@ -44,7 +44,7 @@ def main():
 
     st.header("Téléchargement et extraction des fichiers de données")
     
-    year = st.slider("Choisissez une année", min_value=1970, max_value=2023, step=1)
+    year = st.selectbox("Choisissez une année", list(range(1970, 2024)))
     
     if year <= 2010:
         decade = (year // 10) * 10
@@ -77,7 +77,7 @@ def main():
     template_line = "{:<10} {:,}"
     st.write(template_line.format('df', len(df)))
     st.write(template_line.format('women', len(women)))
-    st.write(template_line.format('men', len(men)))
+   st.write(template_line.format('men', len(men)))
 
     st.subheader("Graphique des décès par année")
     sns.set()
