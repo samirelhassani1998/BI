@@ -18,7 +18,7 @@ def download_unzip(zipurl, destination):
     except HTTPError as e:
         print(f"HTTP Error: {e.code} {e.reason} for URL: {zipurl}")
 
-@st.cache_data(ttl=3600)  # Cache for 1 hour
+@st.cache(ttl=3600)  # Cache for 1 hour
 def load_and_process_data(year):
     csv_files = sorted(glob.glob(f'data/*{year}*.csv'))
     n_files = len(csv_files)
