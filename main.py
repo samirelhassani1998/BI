@@ -81,6 +81,7 @@ def main():
     st.subheader("Graphique des décès par année")
     sns.set()
     by_year = df.groupby('death_year').size()
+    st.line_chart(by_year)
 
 if __name__ == "__main__":
     main()
