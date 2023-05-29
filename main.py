@@ -64,7 +64,7 @@ def main():
     st.success("Téléchargement et extraction des fichiers de données terminés.")
 
     st.header("Chargement des données")
-    df = load_and_process_data(year)  # changed here
+    df = load_and_process_data(year)
 
     women = df[df.sexe == 2]  # a subset containing women
     men = df[df.sexe == 1]  # a subset containing men
@@ -78,11 +78,11 @@ def main():
     st.write(template_line.format('women', len(women)))
     st.write(template_line.format('men', len(men)))
 
-    st.subheader("Graphique des décès par année")
+    st.subheader("Graphique des décès par mois")
     sns.set()
-    by_year = df.groupby('death_year').size()
-    st.line_chart(by_year)
+    df['death_month'] = df['datedeces'].dt.month
+    by_month = df[df['datedeces'].dt.year == year].groupby('death_month').size()
+    st.line_chart(by_month)
 
 if __name__ == "__main__":
     main()
-
