@@ -36,7 +36,7 @@ def load_data(year):
         df_years.append(df_year)
     df = pd.concat(df_years, axis=0, ignore_index=True)
     return df.copy()  # return a copy of the DataFrame
-df = load_data(year).copy() 
+
 def main():
     st.title("Dataviz sur Streamlit")
 
@@ -53,6 +53,7 @@ def main():
         url = f"https://www.insee.fr/fr/statistiques/fichier/4190491/Deces_{year}.zip"
         st.write("Downloading and extracting", url)
         download_unzip(url, 'data')
+    df = load_data(year).copy()  # move this line inside the main function
 
     st.success("Téléchargement et extraction des fichiers de données terminés.")
 
