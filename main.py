@@ -35,9 +35,8 @@ def load_data(year):
                               na_filter=False)
         df_years.append(df_year)
     df = pd.concat(df_years, axis=0, ignore_index=True)
-    del df_years  # free memory
-    return df
-
+    return df.copy()  # return a copy of the DataFrame
+df = load_data(year).copy() 
 def main():
     st.title("Dataviz sur Streamlit")
 
