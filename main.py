@@ -8,6 +8,8 @@ import glob
 from urllib.error import HTTPError
 import matplotlib.pyplot as plt
 import seaborn as sns
+from streamlit import plotly_chart
+import plotly.express as px
 
 def download_unzip(zipurl, destination):
     """Download zipfile from URL and extract it to destination"""
@@ -87,3 +89,30 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
+    # Ajoutez ces fonctions dans votre script
+def plot_demographic_analysis(df):
+    st.header("Analyse démographique des décès")
+    demographic_feature = st.selectbox("Choisissez une caractéristique démographique", ["sexe", "age", "lieu_naissance", "lieu_deces"])
+    fig = px.histogram(df, x=demographic_feature)
+    st.plotly_chart(fig)
+
+def plot_temporal_analysis(df):
+    st.header("Analyse temporelle des décès")
+    df['death_month'] = df['datedeces'].dt.month
+    df['death_year'] = df['datedeces'].dt.year
+    temporal_feature = st.selectbox("Choisissez une caractéristique temporelle", ["death_month", "death_year"])
+    fig = px.histogram(df, x=temporal_feature)
+    st.plotly_chart(fig)
+
+def plot_migration_analysis(df):
+    st.header("Analyse des décès par lieu de naissance et lieu de décès")
+    birth_place = st.selectbox("Choisissez un lieu de naissance", df["lieu_naissance"].unique())
+    death_place_df = df[df["lieu_naissance"] == birth_place]
+    fig = px.histogram(death_place_df, x="lieu_deces")
+    st.plotly_chart(fig)
+
+# Ajoutez ces lignes à la fin de la fonction `main` pour appeler les nouvelles fonctions
+plot_demographic_analysis(df)
+plot_temporal_analysis(df)
+plot_migration_analysis(df)
