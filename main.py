@@ -45,11 +45,12 @@ def load_and_process_data(year):
 
 
 def main():
-    st.title("Dataviz sur Streamlit")
+    st.title("Visualisation des données de décès")
 
-    st.header("Téléchargement et extraction des fichiers de données")
+    st.sidebar.header("Paramètres")
+    year = st.sidebar.selectbox("Choisissez une année", list(range(1970, 2024)))
     
-    year = st.selectbox("Choisissez une année", list(range(1970, 2024)))
+    st.header("Téléchargement des données")
     
     if year <= 2010:
         decade = (year // 10) * 10
@@ -63,21 +64,21 @@ def main():
 
     st.success("Téléchargement et extraction des fichiers de données terminés.")
 
-    st.header("Chargement des données")
+    st.header("Données")
     df = load_and_process_data(year)
 
     women = df[df.sexe == 2]  # a subset containing women
     men = df[df.sexe == 1]  # a subset containing men
 
-    st.subheader("Affichage des données")
+    st.subheader("Aperçu des données")
     st.dataframe(df.head())
 
     st.subheader("Statistiques")
-    template_line = "{:<10} {:,}"
-    st.write(template_line.format('df', len(df)))
-    st.write(template_line.format('women', len(women)))
-    st.write(template_line.format('men', len(men)))
+    st.markdown(f"* Total des données : **{len(df):,}**")
+    st.markdown(f"* Nombre de femmes : **{len(women):,}**")
+    st.markdown(f"* Nombre d'hommes : **{len(men):,}**")
 
+    st.header("Visualisation des données")
     st.subheader("Graphique des décès par mois")
     sns.set()
     df['death_month'] = df['datedeces'].dt.month
