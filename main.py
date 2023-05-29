@@ -37,11 +37,13 @@ def load_and_process_data(year):
     df = pd.concat(df_years, axis=0, ignore_index=True)
 
     # process data
+    df = df.copy()  # make a copy before modifying
     df = df.dropna(axis='index')  
     df['age'] = (df['datedeces'] - df['datenaiss']) / np.timedelta64(1, 'Y')
     df = df[df['age'] >= 0]
     df['death_year'] = df['datedeces'].dt.year
     return df
+
 
 
 def main():
