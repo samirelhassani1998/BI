@@ -64,14 +64,7 @@ def main():
     st.success("Téléchargement et extraction des fichiers de données terminés.")
 
     st.header("Chargement des données")
-    df = load_data(year).copy()  # make a copy here
-
-    st.subheader("Nettoyage des données")
-
-    df = df.dropna(axis='index')  # don't modify in-place
-    df['age'] = (df['datedeces'] - df['datenaiss']) / np.timedelta64(1, 'Y')
-    df = df[df['age'] >= 0]
-    df['death_year'] = df['datedeces'].dt.year
+    df = load_and_process_data(year)  # changed here
 
     women = df[df.sexe == 2]  # a subset containing women
     men = df[df.sexe == 1]  # a subset containing men
