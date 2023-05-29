@@ -62,7 +62,7 @@ def main():
 
     st.subheader("Nettoyage des données")
     df.dropna(axis='index', inplace=True)
-    df['age'] = (df['datedeces'] - df['datenaiss']) / np.timedelta64((1, 'Y')
+    df['age'] = (df['datedeces'] - df['datenaiss']) / np.timedelta64(1, 'Y')
     df = df[df['age'] >= 0]
 
     df['death_year'] = df['datedeces'].dt.year
