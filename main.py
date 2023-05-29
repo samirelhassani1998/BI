@@ -25,7 +25,6 @@ def load_data(year):
     n_files = len(csv_files)
     df_years = []
     for i, csv_file in enumerate(csv_files):
-        st.write(f"Loading {csv_file} ({i + 1}/{n_files})", end='\r', flush=True)
         df_year = pd.read_csv(csv_file,
                               sep=';',
                               usecols=[1, 2, 6],
@@ -63,7 +62,7 @@ def main():
 
     st.subheader("Nettoyage des données")
     df.dropna(axis='index', inplace=True)
-    df['age'] = (df['datedeces'] - df['datenaiss']) / np.timedelta64(1, 'Y')
+    df['age'] = (df['datedeces'] - df['datenaiss']) / np.timedelta64((1, 'Y')
     df = df[df['age'] >= 0]
 
     df['death_year'] = df['datedeces'].dt.year
