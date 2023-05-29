@@ -20,7 +20,7 @@ def download_unzip(zipurl, destination):
         print(f"HTTP Error: {e.code} {e.reason} for URL: {zipurl}")
 
 @st.cache
-def load_data(year):
+def load_and_process_data(year):
     csv_files = sorted(glob.glob(f'data/*{year}*.csv'))
     n_files = len(csv_files)
     df_years = []
@@ -35,7 +35,14 @@ def load_data(year):
                               na_filter=False)
         df_years.append(df_year)
     df = pd.concat(df_years, axis=0, ignore_index=True)
-    return df.copy()  # return a copy of the DataFrame
+
+    # process data
+    df = df.dropna(axis='index')  
+    df['age'] = (df['datedeces'] - df['datenaiss']) / np.timedelta64(1, 'Y')
+    df = df[df['age'] >= 0]
+    df['death_year'] = df['datedeces'].dt.year
+    return df
+
 
 def main():
     st.title("Dataviz sur Streamlit")
