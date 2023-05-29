@@ -5,3 +5,4 @@ matplotlib==3.5.1
 seaborn==0.11.2
 click==7.1.2
 protobuf==3.20.1
+plotly
