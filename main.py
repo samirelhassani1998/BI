@@ -20,8 +20,8 @@ def download_unzip(zipurl, destination):
         print(f"HTTP Error: {e.code} {e.reason} for URL: {zipurl}")
 
 @st.cache
-def load_data():
-    csv_files = sorted(glob.glob('data/*.csv'))
+def load_data(year):
+    csv_files = sorted(glob.glob(f'data/*{year}*.csv'))
     n_files = len(csv_files)
     df_years = []
     for i, csv_file in enumerate(csv_files):
@@ -43,12 +43,15 @@ def main():
     st.title("Dataviz sur Streamlit")
 
     st.header("Téléchargement et extraction des fichiers de données")
-    for decade in 1970, 1980, 1990, 2000, 2010:
+    
+    year = st.slider("Choisissez une année", min_value=1970, max_value=2023, step=1)
+    
+    if year <= 2010:
+        decade = (year // 10) * 10
         url = f"https://www.insee.fr/fr/statistiques/fichier/4769950/deces-{decade}-{decade + 9}-csv.zip"
         st.write("Downloading and extracting", url)
         download_unzip(url, 'data')
-
-    for year in 2020, 2023:
+    else:
         url = f"https://www.insee.fr/fr/statistiques/fichier/4190491/Deces_{year}.zip"
         st.write("Downloading and extracting", url)
         download_unzip(url, 'data')
@@ -56,7 +59,7 @@ def main():
     st.success("Téléchargement et extraction des fichiers de données terminés.")
 
     st.header("Chargement des données")
-    df = load_data()
+    df = load_data(year)
 
     st.subheader("Nettoyage des données")
     df.dropna(axis='index', inplace=True)
@@ -79,4 +82,6 @@ def main():
     st.subheader("Graphique des décès par année")
     sns.set()
     by_year = df.groupby('death_year').size()
-   
+
+if __name__ == "__main__":
+    main()
