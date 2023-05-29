@@ -77,7 +77,7 @@ def main():
     template_line = "{:<10} {:,}"
     st.write(template_line.format('df', len(df)))
     st.write(template_line.format('women', len(women)))
-   st.write(template_line.format('men', len(men)))
+    st.write(template_line.format('men', len(men)))
 
     st.subheader("Graphique des décès par année")
     sns.set()
