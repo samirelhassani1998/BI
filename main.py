@@ -45,48 +45,6 @@ def load_and_process_data(year):
     df['death_year'] = df['datedeces'].dt.year
     return df
 
-
-def main():
-    st.title("Visualisation des données de décès")
-
-    st.sidebar.header("Paramètres")
-    year = st.sidebar.selectbox("Choisissez une année", list(range(1970, 2024)))
-    
-    st.header("Téléchargement des données")
-    
-    if year <= 2010:
-        decade = (year // 10) * 10
-        url = f"https://www.insee.fr/fr/statistiques/fichier/4769950/deces-{decade}-{decade + 9}-csv.zip"
-        st.write("Downloading and extracting", url)
-        download_unzip(url, 'data')
-    else:
-        url = f"https://www.insee.fr/fr/statistiques/fichier/4190491/Deces_{year}.zip"
-        st.write("Downloading and extracting", url)
-        download_unzip(url, 'data')
-
-    st.success("Téléchargement et extraction des fichiers de données terminés.")
-
-    st.header("Données")
-    df = load_and_process_data(year)
-
-    women = df[df.sexe == 2]  # a subset containing women
-    men = df[df.sexe == 1]  # a subset containing men
-
-    st.subheader("Aperçu des données")
-    st.dataframe(df.head())
-
-    st.subheader("Statistiques")
-    st.markdown(f"* Total des données : **{len(df):,}**")
-    st.markdown(f"* Nombre de femmes : **{len(women):,}**")
-    st.markdown(f"* Nombre d'hommes : **{len(men):,}**")
-
-    st.header("Visualisation des données")
-    st.subheader("Graphique des décès par mois")
-    sns.set()
-    df['death_month'] = df['datedeces'].dt.month
-    by_month = df[df['datedeces'].dt.year == year].groupby('death_month').size()
-    st.line_chart(by_month)
-        # Ajoutez ces fonctions dans votre script
 def plot_demographic_analysis(df):
     st.header("Analyse démographique des décès")
     demographic_feature = st.selectbox("Choisissez une caractéristique démographique", ["sexe", "age", "lieu_naissance", "lieu_deces"])
@@ -108,11 +66,32 @@ def plot_migration_analysis(df):
     fig = px.histogram(death_place_df, x="lieu_deces")
     st.plotly_chart(fig)
 
-# Ajoutez ces lignes à la fin de la fonction `main` pour appeler les nouvelles fonctions
-plot_demographic_analysis(df)
-plot_temporal_analysis(df)
-plot_migration_analysis(df)
+def main():
+    st.title("Visualisation des données de décès")
+
+    st.sidebar.header("Paramètres")
+    year = st.sidebar.selectbox("Choisissez une année", list(range(1970, 2024)))
+
+    st.header("Téléchargement des données")
+
+    if year <= 2010:
+        decade = (year // 10Je suis désolé, il y a eu une erreur de copier-coller. Voici la fin du code :
+
+```python
+        decade = (year // 10) * 10
+        zipurl = f'https://www.insee.fr/fr/statistiques/fichier/4769950/etatcivil{decade}{year % 10}.zip'
+    else:
+        zipurl = f'https://www.insee.fr/fr/statistiques/fichier/4769950/etatcivil{year}.zip'
+    st.write(f"Téléchargement et décompression de {zipurl}")
+    download_unzip(zipurl, 'data')
+
+    st.header("Chargement et traitement des données")
+    st.write(f"Chargement des fichiers CSV pour l'année {year}")
+    df = load_and_process_data(year)
+
+    plot_demographic_analysis(df)
+    plot_temporal_analysis(df)
+    plot_migration_analysis(df)
+
 if __name__ == "__main__":
     main()
-    
-
