@@ -86,11 +86,7 @@ def main():
     df['death_month'] = df['datedeces'].dt.month
     by_month = df[df['datedeces'].dt.year == year].groupby('death_month').size()
     st.line_chart(by_month)
-
-if __name__ == "__main__":
-    main()
-    
-    # Ajoutez ces fonctions dans votre script
+        # Ajoutez ces fonctions dans votre script
 def plot_demographic_analysis(df):
     st.header("Analyse démographique des décès")
     demographic_feature = st.selectbox("Choisissez une caractéristique démographique", ["sexe", "age", "lieu_naissance", "lieu_deces"])
@@ -116,3 +112,7 @@ def plot_migration_analysis(df):
 plot_demographic_analysis(df)
 plot_temporal_analysis(df)
 plot_migration_analysis(df)
+if __name__ == "__main__":
+    main()
+    
+
