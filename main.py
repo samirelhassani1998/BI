@@ -75,9 +75,6 @@ def main():
     st.header("Téléchargement des données")
 
     if year <= 2010:
-        decade = (year // 10Je suis désolé, il y a eu une erreur de copier-coller. Voici la fin du code :
-
-```python
         decade = (year // 10) * 10
         zipurl = f'https://www.insee.fr/fr/statistiques/fichier/4769950/etatcivil{decade}{year % 10}.zip'
     else:
