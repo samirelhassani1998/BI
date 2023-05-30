@@ -61,10 +61,13 @@ def plot_temporal_analysis(df):
 
 def plot_migration_analysis(df):
     st.header("Analyse des décès par lieu de naissance et lieu de décès")
-    birth_place = st.selectbox("Choisissez un lieu de naissance", df["lieu_naissance"].unique())
-    death_place_df = df[df["lieu_naissance"] == birth_place]
-    fig = px.histogram(death_place_df, x="lieu_deces")
-    st.plotly_chart(fig)
+    if "lieu_naissance" in df.columns:
+        birth_place = st.selectbox("Choisissez un lieu de naissance", df["lieu_naissance"].unique())
+        death_place_df = df[df["lieu_naissance"] == birth_place]
+        fig = px.histogram(death_place_df, x="lieu_deces")
+        st.plotly_chart(fig)
+    else:
+        st.write("La colonne 'lieu_naissance' n'existe pas dans le DataFrame.")
 
 def main():
     st.title("Visualisation des données de décès")
