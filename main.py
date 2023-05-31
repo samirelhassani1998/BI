@@ -11,6 +11,7 @@ import seaborn as sns
 from streamlit import plotly_chart
 import plotly.express as px
 
+@st.cache(show_spinner=False)
 def download_unzip(zipurl, destination):
     """Download zipfile from URL and extract it to destination"""
     try:
@@ -18,9 +19,9 @@ def download_unzip(zipurl, destination):
             with ZipFile(BytesIO(zipresp.read())) as zfile:
                 zfile.extractall(destination)
     except HTTPError as e:
-        print(f"HTTP Error: {e.code} {e.reason} for URL: {zipurl}")
+        st.error(f"HTTP Error: {e.code} {e.reason} for URL: {zipurl}")
 
-@st.cache(ttl=3600)  # Cache for 1 hour
+@st.cache(ttl=3600, show_spinner=False)  # Cache for 1 hour
 def load_and_process_data(year):
     csv_files = sorted(glob.glob(f'data/*{year}*.csv'))
     n_files = len(csv_files)
@@ -63,12 +64,14 @@ def plot_migration_analysis(df):
     st.header("Analyse des décès par lieu de naissance et lieu de décès")
     if "Code du lieu de naissance" in df.columns:
         birth_place = st.selectbox("Choisissez un lieu de naissance", df["Code du lieu de naissance"].unique())
+        death_place_df = df[df["Code du lieu de naissance"]Il semble que la réponse a été tronquée. Voici la suite de cette réponse :
+
+```python
         death_place_df = df[df["Code du lieu de naissance"] == birth_place]
         fig = px.histogram(death_place_df, x="Code du lieu de décès")
         st.plotly_chart(fig)
     else:
         st.write("La colonne 'Code du lieu de naissance' n'existe pas dans le DataFrame.")
-
 
 def main():
     st.title("Visualisation des données de décès")
@@ -83,12 +86,13 @@ def main():
         zipurl = f'https://www.insee.fr/fr/statistiques/fichier/4769950/etatcivil{decade}{year % 10}.zip'
     else:
         zipurl = f'https://www.insee.fr/fr/statistiques/fichier/4769950/etatcivil{year}.zip'
-    st.write(f"Téléchargement et décompression de {zipurl}")
-    download_unzip(zipurl, 'data')
+    
+    with st.spinner("Téléchargement et décompression des données..."):
+        download_unzip(zipurl, 'data')
 
     st.header("Chargement et traitement des données")
-    st.write(f"Chargement des fichiers CSV pour l'année {year}")
-    df = load_and_process_data(year)
+    with st.spinner(f"Chargement et traitement des fichiers CSV pour l'année {year}"):
+        df = load_and_process_data(year)
 
     plot_demographic_analysis(df)
     plot_temporal_analysis(df)
