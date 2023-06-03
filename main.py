@@ -11,7 +11,7 @@ import seaborn as sns
 from streamlit import plotly_chart
 import plotly.express as px
 
-@st.cache(show_spinner=False)
+
 def download_unzip(zipurl, destination):
     """Download zipfile from URL and extract it to destination"""
     try:
@@ -19,9 +19,8 @@ def download_unzip(zipurl, destination):
             with ZipFile(BytesIO(zipresp.read())) as zfile:
                 zfile.extractall(destination)
     except HTTPError as e:
-        st.error(f"HTTP Error: {e.code} {e.reason} for URL: {zipurl}")
-
-@st.cache(ttl=3600, show_spinner=False)  # Cache for 1 hour
+        print(f"HTTP Error: {e.code} {e.reason} for URL: {zipurl}")
+@st.cache(ttl=3600)  # Cache for 1 hour
 def load_and_process_data(year):
     csv_files = sorted(glob.glob(f'data/*{year}*.csv'))
     n_files = len(csv_files)
@@ -37,7 +36,6 @@ def load_and_process_data(year):
                               na_filter=False)
         df_years.append(df_year)
     df = pd.concat(df_years, axis=0, ignore_index=True)
-
     # process data
     df = df.copy()  # make a copy before modifying
     df = df.dropna(axis='index')  
