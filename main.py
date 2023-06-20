@@ -23,10 +23,10 @@ linkedin = "https://www.linkedin.com/in/elhassanisamir/"
 github = "https://github.com/samirelhassani1998"
 
 # Afficher les informations dans la barre latérale
-st.sidebar.title("Informations personnelles")
-st.sidebar.subheader("Nom")
+st.sidebar.title("Personal information")
+st.sidebar.subheader("Name")
 st.sidebar.text(nom)
-st.sidebar.subheader("Prénom")
+st.sidebar.subheader("First name")
 st.sidebar.text(prenom)
 st.sidebar.subheader("LinkedIn")
 st.sidebar.markdown(f'<a href="{linkedin}" target="_blank"><img src="https://blog.waalaxy.com/wp-content/uploads/2021/01/index.png" alt="LinkedIn" width="150"></a>', unsafe_allow_html=True)
@@ -98,6 +98,10 @@ df = df[df['datedeces'].dt.year == year_to_download]
 # Extraction de l'année et du mois de la date de décès
 df['death_year'] = df['datedeces'].dt.year
 df['death_month'] = df['datedeces'].dt.month
+
+# Calculate average age at death for each month
+average_age_by_month = df.groupby('death_month')['age'].mean()
+
 
 # Filtration des données pour l'année sélectionnée
 df_selected_year = df[df['death_year'] == selected_year]
@@ -249,3 +253,40 @@ fig.update_layout(title=f"Number of deaths in {selected_year}",
 
 # Display the figure in Streamlit
 st.plotly_chart(fig)
+
+# Créer un nouveau graphique
+fig = go.Figure()
+
+# Ajouter une trace pour l'âge moyen au moment du décès par mois
+fig.add_trace(go.Scatter(x=average_age_by_month.index, y=average_age_by_month.values,
+                    mode='lines+markers',
+                    name='Average Age'))
+
+# Mettre à jour le layout
+fig.update_layout(title='Average Age at Death by Month',
+                   xaxis_title='Month',
+                   yaxis_title='Average Age at Death')
+
+# Afficher le graphique dans Streamlit
+st.plotly_chart(fig)
+
+from sklearn.cluster import KMeans
+# Préparation des données pour le clustering
+cluster_data = df[['death_month', 'age']].dropna()
+
+# Normalisation des données
+cluster_data = (cluster_data - cluster_data.min()) / (cluster_data.max() - cluster_data.min())
+# Appliquer KMeans
+kmeans = KMeans(n_clusters=3, random_state=42)
+kmeans.fit(cluster_data)
+# Ajouter les labels du cluster à la dataframe
+df['cluster'] = kmeans.labels_
+# Visualiser les clusters
+fig, ax = plt.subplots()
+scatter = ax.scatter(df['death_month'], df['age'], c=df['cluster'])
+legend1 = ax.legend(*scatter.legend_elements(), title="Clusters")
+ax.add_artist(legend1)
+plt.show()
+
+# Afficher le graphique dans Streamlit
+st.pyplot(fig)
